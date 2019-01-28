@@ -1,15 +1,8 @@
-package com.tblf;
-
-import org.powerapi.core.power.Power;
-import org.powerapi.core.target.Target;
-import org.powerapi.reporter.ConsoleDisplay;
-import scala.collection.immutable.Set;
+package org.atlanmod;
 
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.DoubleAdder;
 
 /**
  * Hello world!
