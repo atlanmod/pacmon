@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 import org.powerapi.core.LinuxHelper
 import org.powerapi.core.target.Process
 import org.powerapi.module.cpu.simple.CpuSimpleModule
-import org.powerapi.reporter.{ConsoleDisplay, JFreeChartDisplay}
+import org.powerapi.reporter.ConsoleDisplay
 import org.powerapi.{PowerDisplay, PowerMeter, PowerMonitoring}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
