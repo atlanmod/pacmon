@@ -30,5 +30,5 @@ Finally the `withCustomDisplay` enables the usage of custom tools, in order to r
 /!\ About `CustomDisplay`s : Modern IDEs might propose you to declare those as anonymous functions. *DON'T*! The Actor's names in Akka are automatically generated through the class names of the Displays. An anonymous function will result in a disfunction of the Monitor.
 
 To run the built `Monitor`, simply call `monitor.run(pid);`
-
+And, to stop it, `monitor.stop();`
 
