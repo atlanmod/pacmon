@@ -26,7 +26,7 @@ public class OnTheFlyAdvice {
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                 String s = power.toMilliWatts() + ";";
                 try {
-                    Files.write(Paths.get("/home/alexis/outputTER.txt"), s.getBytes(), StandardOpenOption.APPEND);
+                    Files.write(Paths.get("./energyInstrumentation/src/main/resources/outputTER.txt"), s.getBytes(), StandardOpenOption.APPEND);
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
