@@ -7,6 +7,11 @@ import org.powerapi.core.target.Target;
 import scala.Long;
 import scala.collection.immutable.Set;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +24,12 @@ public class OnTheFlyAdvice {
         PowerDisplay display = new PowerDisplay() {
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
-                list.add(power.toMilliWatts());
+                String s = power.toMilliWatts() + ";";
+                try {
+                    Files.write(Paths.get("/home/alexis/outputTER.txt"), s.getBytes(), StandardOpenOption.APPEND);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
         monitor = new MonitorBuilder()
