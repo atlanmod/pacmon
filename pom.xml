@@ -11,6 +11,10 @@
     <modules>
         <module>facadePowerApi</module>
         <module>energyInstrumentation</module>
+        <module>threadlevelEnergy</module>
     </modules>
 
+    <dependencies>
+
+    </dependencies>
 </project>
