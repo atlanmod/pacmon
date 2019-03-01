@@ -21,15 +21,22 @@ public class OnTheFlyAdvice {
     @Advice.OnMethodEnter
     static void enter(@Advice.Local("monitor") Monitor monitor) {
         ArrayList<Double> list = new ArrayList<Double>();
+        String sPath = "./energyInstrumentation/src/main/resources/outputTER.txt";
         try {
-            Files.delete(Paths.get("./energyInstrumentation/src/main/resources/outputTER.txt"));
-        } catch (Exception e) { }
+            Files.delete(Paths.get(sPath));
+        } catch (Exception e) {
+        }
+        try {
+            Files.createFile(Paths.get(sPath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         PowerDisplay display = new PowerDisplay() {
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                 String s = power.toMilliWatts() + ";";
                 try {
-                    Files.write(Paths.get("./energyInstrumentation/src/main/resources/outputTER.txt"), s.getBytes(), StandardOpenOption.APPEND);
+                    Files.write(Paths.get(sPath), s.getBytes(), StandardOpenOption.APPEND);
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
