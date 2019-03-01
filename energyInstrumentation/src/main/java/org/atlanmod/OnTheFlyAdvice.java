@@ -21,6 +21,9 @@ public class OnTheFlyAdvice {
     @Advice.OnMethodEnter
     static void enter(@Advice.Local("monitor") Monitor monitor) {
         ArrayList<Double> list = new ArrayList<Double>();
+        try {
+            Files.delete(Paths.get("./energyInstrumentation/src/main/resources/outputTER.txt"));
+        } catch (Exception e) { }
         PowerDisplay display = new PowerDisplay() {
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
