@@ -2,7 +2,9 @@ package org.atlanmod;
 
 import org.apache.commons.lang.UnhandledException;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 
@@ -15,21 +17,22 @@ public class App
     public static void main( String[] args ) throws Exception
     {
 
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "energyInstrumentation/src/main/resources/processBenchmark-1.0-SNAPSHOT.jar");
 
-        Process process = Runtime.getRuntime().exec("java -jar src/main/resources/processBenchmark-1.0-SNAPSHOT.jar");
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
         //get the input stream of the process to displayit's pid and check we've got the good one
-        InputStream input = process.getInputStream();
-        System.out.println(input.read());
 
+        Process process = processBuilder.start();
         //get the pid field of the process
         Field f = process.getClass().getDeclaredField("pid");
         f.setAccessible(true);
         int pid = (int) f.get(process);
 
-        System.out.println(pid);
+        System.out.println(pid+" now running");
 
-        process.destroy();
+
 
 
         /*
