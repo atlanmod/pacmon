@@ -12,6 +12,7 @@
         <module>facadePowerApi</module>
         <module>energyInstrumentation</module>
         <module>threadlevelEnergy</module>
+        <module>energyBenchmarks</module>
     </modules>
 
     <dependencies>
