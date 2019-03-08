@@ -7,6 +7,8 @@ import org.powerapi.core.target.Target;
 import scala.Long;
 import scala.collection.immutable.Set;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -37,6 +39,30 @@ public class OnTheFlyAdvice {
                 String s = power.toMilliWatts() + ";";
                 try {
                     Files.write(Paths.get(sPath), s.getBytes(), StandardOpenOption.APPEND);
+                    // Calcul des moyennes, sera déplacé plus tard.
+                    try {
+                        BufferedReader reader = new BufferedReader(new FileReader("./energyInstrumentation/src/main/resources/outputTER.txt"));
+                        String str;
+                        str = reader.readLine();
+
+                        String[] tokens = str.split(";");
+
+                        double valeurs[] = new double[tokens.length];
+                        double total = 0;
+                        double moyenne = 0;
+                        for(int i=0; i < tokens.length; i++) {
+                            System.out.println("TEST"+ Double.parseDouble(tokens[i]));
+                            valeurs[i] = Double.parseDouble(tokens[i]);
+                        }
+                        for(int i=0; i < valeurs.length; i++) {
+                            total+=valeurs[i];
+                        }
+                        moyenne = total / valeurs.length;
+                        System.out.println("Moyenne : "+moyenne);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -50,6 +76,8 @@ public class OnTheFlyAdvice {
                 .withCustomDisplay(display)
                 .build();
         monitor.run((int) SystemUtils.getPID());
+
+
     }
 
     @Advice.OnMethodExit
