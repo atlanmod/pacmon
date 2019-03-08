@@ -45,7 +45,6 @@ public class OnTheFlyAdvice {
                 String s = power.toMilliWatts() + "-" + timestamp + ";";
                 try {
                     Files.write(Paths.get(sPath), s.getBytes(), StandardOpenOption.APPEND);
-
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -64,7 +63,6 @@ public class OnTheFlyAdvice {
 
         //we start the measure
         monitor.run((int) SystemUtils.getPID());
-
     }
 
     //called at the end of the method
