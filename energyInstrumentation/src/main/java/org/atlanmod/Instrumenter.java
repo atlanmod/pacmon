@@ -9,7 +9,6 @@ import java.lang.instrument.Instrumentation;
 public class Instrumenter {
 
     public static void premain(String args, Instrumentation instrumentation){
-        System.out.println("I'm being executed as a premain! ");
         new AgentBuilder.Default()
                 .type(ElementMatchers.any())
                 .transform((builder, typeDescription, classLoader, javaModule) ->
