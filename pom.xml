@@ -11,8 +11,9 @@
     <modules>
         <module>facadePowerApi</module>
         <module>energyInstrumentation</module>
-        <module>threadlevelEnergy</module>
+<!--        <module>threadlevelEnergy</module> -->
         <module>energyBenchmarks</module>
+        <module>jvmMonitor</module>
     </modules>
 
     <dependencies>
