@@ -54,14 +54,14 @@ public final class GlobalBufferWriter {
 
     public static void main( String[] args) {
         System.out.println("test de la science universelle");
-        GlobalBufferWriter gb = GlobalBufferWriter.getInstance("/home/louis/git/TER_1_03_2019/jPowerApi/energyInstrumentation/src/main/resources/outputTER333.txt");
+        GlobalBufferWriter gb = GlobalBufferWriter.getInstance("./energyInstrumentation/src/main/resources/outputTER333.txt");
         try {
             gb.bw.write("lol56lolol");
             gb.bw.close();
             gb.fw.close();
         }
         catch (Exception e) {
-            System.out.println("lol ça beug");
+            System.out.println("ça beug");
         }
     }
 }
