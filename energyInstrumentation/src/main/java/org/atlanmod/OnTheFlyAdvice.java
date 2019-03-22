@@ -6,10 +6,7 @@ import org.powerapi.core.power.Power;
 import org.powerapi.core.target.Target;
 import scala.collection.immutable.Set;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -22,19 +19,17 @@ public class OnTheFlyAdvice {
     //called at the beginning of the method
     @Advice.OnMethodEnter
     static void enter(@Advice.Local("monitor") Monitor monitor) {
-
+        System.out.println("Started main method ");
         //the values and their respective timestamps measured by the mosnitor are stored in a file named outputTER
         //using this format : value-timestamp;value1-timestamp1;value2-timestamp2
         String sPath = "./energyInstrumentation/src/main/resources/outputTER.txt";
+        File f = new File(sPath);
+        if (f.exists()) {
+            f.delete();
+        }
         try {
-            Files.delete(Paths.get(sPath));
-        }
-        catch (Exception e) {
-        }
-        try {
-            Files.createFile(Paths.get(sPath));
-        }
-        catch (Exception e) {
+            f.createNewFile();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -68,7 +63,7 @@ public class OnTheFlyAdvice {
     //called at the end of the method
     @Advice.OnMethodExit
     static void exit(@Advice.Local("monitor") Monitor monitor) {
-
+        System.out.println("Ended main method");
         //we stop the measuring
         monitor.stop();
         try {
