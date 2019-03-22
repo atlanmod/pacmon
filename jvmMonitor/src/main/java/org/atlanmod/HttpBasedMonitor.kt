@@ -36,6 +36,6 @@ fun buildMonitor() : Monitor {
          .withChartDisplay()
          .withTdp(15.0)
          .withTdpFactor(0.7)
-         .withRefreshFrequency(1, TimeUnit.MILLISECONDS)
+         .withRefreshFrequency(10, TimeUnit.NANOSECONDS)
          .build()
 }
