@@ -23,16 +23,22 @@ public class OnTheFlyAdvice {
         //the values and their respective timestamps measured by the mosnitor are stored in a file named outputTER
         //using this format : value-timestamp;value1-timestamp1;value2-timestamp2
         String sPath = "./energyInstrumentation/src/main/resources/outputTER.txt";
-        File f = new File(sPath);
-        if (f.exists()) {
-            f.delete();
+        String sPathRes = "./energyInstrumentation/src/main/resources/resultatTER.txt";
+        //TODO: Improvement necessary. Why not checking if the file exist ?
+        try {
+            Files.delete(Paths.get(sPath));
+            Files.delete(Paths.get(sPathRes));
+        }
+        catch (Exception e) {
         }
         try {
-            f.createNewFile();
-        } catch (IOException e) {
+            Files.createFile(Paths.get(sPath));
+            Files.createFile(Paths.get(sPathRes));
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
-
+        GlobalBufferWriter.getInstance("./energyInstrumentation/src/main/resources/resultatTER.txt");
         PowerDisplay display = new PowerDisplay() {
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
@@ -105,10 +111,19 @@ public class OnTheFlyAdvice {
             Long firstTimeStamp = Long.parseLong(timeStampList.get(0));
             Long finalTimeStamp = Long.parseLong(timeStampList.get(timeStampList.size()-1));
             Long timeSecond = (finalTimeStamp-firstTimeStamp)/1000;
-            
             System.out.println("Moyenne de la puissance en watt : "+moyenne/1000);
             System.out.println("Temps en seconde : "+ timeSecond);
             System.out.println("Energie consommee en joule: "+ timeSecond*(moyenne/1000));
+
+            GlobalBufferWriter.bw.write("Moyenne de la puissance en watt : "+moyenne/1000+"  ");;
+            GlobalBufferWriter.bw.write("Temps en seconde : "+ timeSecond+"  ");;
+            GlobalBufferWriter.bw.write("Energie consommee en joule: "+ timeSecond*(moyenne/1000)+"  ");;
+            GlobalBufferWriter.bw.close();
+            GlobalBufferWriter.fw.close();
+
+
+
+
         }
         catch (Exception e) {
             e.printStackTrace();
