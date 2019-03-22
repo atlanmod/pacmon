@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>facadePowerApi</artifactId>
-    <name>jPowerAPI</name>
+    <name>facadePowerApi</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
