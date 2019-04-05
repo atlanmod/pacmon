@@ -9,14 +9,18 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         (new Thread(() -> {
-            for(long i = 0L; i < 9999999999L; ++i) {
+            Thread.currentThread().setName("MY BIG PHAT THREAD");
+            System.out.println("Thread started: "+Thread.currentThread().getId());
+
+            for(long i = 0L; i < 99999999999L; ++i) {
                 ++i;
             }
 
             System.out.println("done");
+            System.exit(1);
         })).start();
         JvmTop jvmTop = new JvmTop();
         jvmTop.setDelay(2.0D);
-        jvmTop.run(new VMDetailView(21793, Integer.valueOf(1)));
+        jvmTop.run(new VMDetailView((int) SystemUtils.getPID(), 1));
     }
 }
