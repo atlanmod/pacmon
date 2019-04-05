@@ -11,7 +11,7 @@
     <modules>
         <module>facadePowerApi</module>
         <module>energyInstrumentation</module>
-<!--        <module>threadlevelEnergy</module> -->
+        <module>threadlevelEnergy</module>
         <module>jvmMonitor</module>
     </modules>
 
