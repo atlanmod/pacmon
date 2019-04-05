@@ -8,7 +8,7 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        (new Thread(() -> {
+        Thread t1 = new Thread(() -> {
             Thread.currentThread().setName("MY BIG PHAT THREAD");
             System.out.println("Thread started: "+Thread.currentThread().getId());
 
@@ -18,7 +18,9 @@ public class App {
 
             System.out.println("done");
             System.exit(1);
-        })).start();
+        });
+
+        t1.start();
         JvmTop jvmTop = new JvmTop();
         jvmTop.setDelay(2.0D);
         jvmTop.run(new VMDetailView((int) SystemUtils.getPID(), 1));

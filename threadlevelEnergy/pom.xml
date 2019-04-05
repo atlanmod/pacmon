@@ -33,8 +33,6 @@
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>${jdk.version}</version>
-            <scope>system</scope>
-            <systemPath>${toolsjar}</systemPath>
         </dependency>
         <dependency>
             <groupId>org.atlanmod</groupId>
@@ -51,6 +49,7 @@
                 <version>2.5</version>
                 <executions>
                     <execution>
+                        <id>install jvmtop</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>install-file</goal>
@@ -61,6 +60,20 @@
                             <version>0.9.0-SNAPSHOT</version>
                             <packaging>jar</packaging>
                             <file>${basedir}/src/main/resources/jvmtop-0.9.0-SNAPSHOT-jar-with-dependencies.jar</file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install tools</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.sun</groupId>
+                            <artifactId>tools</artifactId>
+                            <version>${jdk.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${toolsjar}</file>
                         </configuration>
                     </execution>
                 </executions>
