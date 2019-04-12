@@ -19,7 +19,7 @@ public class Instrumenter {
                 .with(new AgentBuilder.InitializationStrategy.SelfInjection.Eager())
                 .type(ElementMatchers.nameStartsWith(args))
                 .transform((builder, typeDescription, classLoader, javaModule) ->
-                        builder .method(ElementMatchers.any()).intercept(Advice.to(MonitorInterceptor.class))
+                        builder /*.method(ElementMatchers.any()).intercept(Advice.to(MonitorInterceptor.class))*/
                                 .method(ElementMatchers.named("main")).intercept(Advice.to(OnTheFlyAdvice.class))
                 )
                 .installOn(instrumentation);

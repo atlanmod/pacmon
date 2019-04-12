@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+
 public class OnTheFlyAdvice {
 
     //called at the beginning of the method
@@ -25,39 +26,38 @@ public class OnTheFlyAdvice {
         String sPath = "./energyInstrumentation/src/main/resources/outputTER.txt";
         String sPathRes = "./energyInstrumentation/src/main/resources/resultatTER.txt";
         //TODO: Improvement necessary. Why not checking if the file exist ?
+
         try {
             Files.delete(Paths.get(sPath));
             Files.delete(Paths.get(sPathRes));
-        }
-        catch (Exception e) {
-        }
-        try {
+
             Files.createFile(Paths.get(sPath));
             Files.createFile(Paths.get(sPathRes));
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
         GlobalBufferWriter.getInstance("./energyInstrumentation/src/main/resources/resultatTER.txt");
-        PowerDisplay display = new PowerDisplay() {
+
+        PowerDisplay display = new PowerDisplay() { //DONT COLLAPSE TO LAMBDA
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
+                System.out.println(power.toMilliWatts() + "-" + timestamp + ";");
 
-                String s = power.toMilliWatts() + "-" + timestamp + ";";
-                try {
+                /*try {
                     Files.write(Paths.get(sPath), s.getBytes(), StandardOpenOption.APPEND);
                 }catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
 
             }
-
         };
 
         monitor = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
                 .withRefreshFrequency(100, TimeUnit.MILLISECONDS)
-                .withTdp(47)
+                .withTdp(15)
                 .withTdpFactor(0.7)
                 .withCustomDisplay(display)
                 .build();
