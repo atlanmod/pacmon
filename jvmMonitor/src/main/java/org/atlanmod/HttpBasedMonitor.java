@@ -16,11 +16,20 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpBasedMonitor {
     private static Monitor monitor;
+    private static File file;
+    private static File trace;
 
 
     public static void main(String[] args) throws IOException {
 
+        file = new File("./jvmMonitor/src/main/resources/trace");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        trace = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".txt", file);
         monitor = buildMonitor();
+
         Javalin javalin = Javalin.create();
 
         javalin.post("/start", ctx -> {
@@ -33,6 +42,7 @@ public class HttpBasedMonitor {
             monitor.stop();
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
+            trace = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".txt", file);
             monitor = buildMonitor();
         });
 
@@ -41,10 +51,9 @@ public class HttpBasedMonitor {
     }
 
     public static Monitor buildMonitor() throws IOException {
-        File file = new File("./jvmMonitor/src/main/resources/trace");
-        File trace = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".txt", file);
-        FileOutputStream fileOutputStream = new FileOutputStream(trace);
 
+
+        FileOutputStream fileOutputStream = new FileOutputStream(trace);
         System.out.println("Trace writing in "+file.getAbsolutePath());
 
         //TODO: Change writing system to binary
