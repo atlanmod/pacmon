@@ -13,6 +13,7 @@
         <module>energyInstrumentation</module>
         <module>threadlevelEnergy</module>
         <module>jvmMonitor</module>
+        <module>raplMonitor</module>
     </modules>
 
     <dependencies>
