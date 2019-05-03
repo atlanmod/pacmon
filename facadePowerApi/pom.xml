@@ -37,7 +37,7 @@
             </snapshots>
         </repository>
     </repositories>
-
+<!--
     <pluginRepositories>
         <pluginRepository>
             <id>scala-tools.org</id>
@@ -45,7 +45,7 @@
             <url>http://scala-tools.org/repo-releases</url>
         </pluginRepository>
     </pluginRepositories>
-
+-->
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -64,11 +64,11 @@
             <version>1.2.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.powerapi</groupId>
-            <artifactId>powerapi-core_2.11</artifactId>
-            <version>LATEST</version>
-        </dependency>
+	<dependency>
+	  <groupId>org.powerapi</groupId>
+	  <artifactId>powerapi-core_2.11</artifactId>
+	  <version>4.0</version>
+	</dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
