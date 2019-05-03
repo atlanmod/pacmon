@@ -4,12 +4,14 @@ import org.junit.Test;
 import org.powerapi.PowerDisplay;
 import org.powerapi.core.power.Power;
 import org.powerapi.core.target.Target;
+import org.powerapi.module.PowerChannel;
 import scala.collection.immutable.Set;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
@@ -80,7 +82,6 @@ public class AppTest
                 .withTdpFactor(0.7)
                 .withCustomDisplay(new PowerDisplay() {
                     //DO NOT REDUCE TO LAMBDA EXPRESSION
-                    @Override
                     public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                         powers.put(power, timestamp);
                     }

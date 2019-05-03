@@ -42,10 +42,12 @@ public class HttpBasedMonitor {
 
     public static Monitor buildMonitor() throws IOException {
         File file = new File("./jvmMonitor/src/main/resources/trace");
+        if (!file.exists())
+            file.mkdirs();
         File trace = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".txt", file);
         FileOutputStream fileOutputStream = new FileOutputStream(trace);
 
-        System.out.println("Trace writing in "+file.getAbsolutePath());
+        System.out.println("Trace writing in "+trace.getAbsolutePath());
 
         //TODO: Change writing system to binary
 
