@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>threadLevelEnergy</artifactId>
-
+    <name>threadLevelJVMMonitor</name>
 
     <properties>
         <!-- change it to point to your tools.jar from your JDK -->

@@ -4,7 +4,6 @@ import com.jvmtop.monitor.VMInfo;
 import com.jvmtop.openjdk.tools.LocalVirtualMachine;
 import com.jvmtop.openjdk.tools.ProxyClient;
 
-import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
 public class ThreadMonitor {
