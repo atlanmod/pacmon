@@ -48,8 +48,8 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <main-Class>org.org.atlanmod.App</main-Class>
-                            <Premain-Class>org.org.atlanmod.Instrumenter</Premain-Class>
+                            <main-Class>org.atlanmod.App</main-Class>
+                            <Premain-Class>org.atlanmod.Instrumenter</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

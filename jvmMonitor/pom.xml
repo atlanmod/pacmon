@@ -60,8 +60,8 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <main-Class>org.org.atlanmod.HttpBasedMonitor</main-Class>
-                            <Premain-class>org.org.atlanmod.HttpBasedMonitorInstrumenter</Premain-class>
+                            <main-Class>org.atlanmod.HttpBasedMonitor</main-Class>
+                            <Premain-class>org.atlanmod.HttpBasedMonitorInstrumenter</Premain-class>
                         </manifestEntries>
                     </archive>
                 </configuration>
