@@ -1,8 +1,5 @@
-package atlanmod;
+package org.atlanmod;
 
-import org.atlanmod.Monitor;
-import org.atlanmod.MonitorBuilder;
-import org.atlanmod.SystemUtils;
 import org.atlanmod.module.ThreadModule;
 import org.junit.Test;
 import org.powerapi.core.LinuxHelper;

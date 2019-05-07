@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>jPowerAPI</artifactId>
-        <groupId>org.atlanmod</groupId>
+        <groupId>org.org.atlanmod</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -22,7 +22,7 @@
             <version>1.9.9</version>
         </dependency>
         <dependency>
-            <groupId>org.atlanmod</groupId>
+            <groupId>org.org.atlanmod</groupId>
             <artifactId>facadePowerApi</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -48,8 +48,8 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <main-Class>org.atlanmod.App</main-Class>
-                            <Premain-Class>org.atlanmod.Instrumenter</Premain-Class>
+                            <main-Class>org.org.atlanmod.App</main-Class>
+                            <Premain-Class>org.org.atlanmod.Instrumenter</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
