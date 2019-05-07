@@ -58,7 +58,7 @@ public class ThreadMonitor {
         //Getting new CPU values
         oldCPUUptime = CPUUptime;
         CPUUptime = proxyClient.getProcessCpuTime();
-
+        System.out.println(CPUUptime);
         //Computing Delta since last update to get average running duration
         threadDelta = threadCPUTime - oldThreadCPUTime;
         delta = CPUUptime - oldCPUUptime;

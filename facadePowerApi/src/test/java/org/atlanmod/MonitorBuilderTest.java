@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class MonitorBuilderTest
 {
 
     @Test

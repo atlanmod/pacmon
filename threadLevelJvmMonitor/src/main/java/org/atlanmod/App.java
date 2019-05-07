@@ -1,11 +1,5 @@
 package org.atlanmod;
 
-import com.jvmtop.JvmTop;
-import com.jvmtop.monitor.VMInfo;
-import com.jvmtop.openjdk.tools.LocalVirtualMachine;
-import com.jvmtop.view.ConsoleView;
-import com.jvmtop.view.VMDetailView;
-
 public class App {
     public App() {
     }

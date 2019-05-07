@@ -2,7 +2,7 @@ package org.atlanmod
 
 import java.util.concurrent.TimeUnit
 
-import org.powerapi.PowerDisplay
+import org.powerapi.{PowerDisplay, PowerModule}
 import org.powerapi.reporter.{ConsoleDisplay, JFreeChartDisplay}
 
 import scala.concurrent.duration.FiniteDuration
@@ -42,6 +42,11 @@ class MonitorBuilder {
 
   def withCustomDisplay(display: PowerDisplay): MonitorBuilder = {
     monitor.console = display
+    this
+  }
+
+  def withModule(powerModule: PowerModule): MonitorBuilder = {
+    monitor.module = powerModule
     this
   }
 
