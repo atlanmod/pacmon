@@ -12,10 +12,11 @@ import java.util.Random;
  * Hello world!
  *
  */
-public class App 
+public class App
 {
     public static void main( String[] args )
     {
+        String sPathValue = "./raplMonitor/src/main/resources/values.txt";
         String sPathRes = "./raplMonitor/src/main/resources/resultatTER.txt";
         try {
 
@@ -28,7 +29,8 @@ public class App
             e.printStackTrace();
         }
 
-        GlobalBufferWriter.getInstance("./raplMonitor/src/main/resources/resultatTER.txt");
+
+        GlobalBufferWriter.getInstance("./raplMonitor/src/main/resources/values.txt");
         double total = 0;
         for(int i = 0; i < 100; i++) {
             double timestart = System.nanoTime();
@@ -37,17 +39,25 @@ public class App
             double res = computePI(number);
             double end = RAPLMonitor.getEnergy();
             double timeend = System.nanoTime();
-          //  System.out.println("Résultat de PI : "+res);
+            //  System.out.println("Résultat de PI : "+res);
             double energy = end-start;
+            try {
+                GlobalBufferWriter.bw.write(String.valueOf(energy)+"/");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             double time = timeend-timestart;
-           // System.out.println("Energie consommée (J): "+energy/1000000);
-           // System.out.println("Temps : "+time);
+            // System.out.println("Energie consommée (J): "+energy/1000000);
+            // System.out.println("Temps : "+time);
             double puissance = (energy*1000) / time;
-           // System.out.println("Puissance : "+puissance);
+            // System.out.println("Puissance : "+puissance);
             total +=(energy/1000000);
         }
+
         try {
-            GlobalBufferWriter.bw.write("Moyenne de l'energie en watt : "+total/100+"  ");
+
+
+            //  GlobalBufferWriter.bw.write(String.valueOf(total/100));
             GlobalBufferWriter.bw.close();
             GlobalBufferWriter.fw.close();
         } catch (IOException e) {
@@ -57,8 +67,36 @@ public class App
 
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("./raplMonitor/src/main/resources/resultatTER.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("./raplMonitor/src/main/resources/values.txt"));
+            String values = org.apache.commons.io.IOUtils.toString(reader);
+            String correctedValues = values.replaceAll("/0.0", "");
+            if(Character.toString(correctedValues.charAt(0)).equals("0")) {
+                correctedValues = correctedValues.substring(4);
+            }
+
+            String[] array = correctedValues.split("/");
+            Double[] arrayDouble = new Double[array.length];
+            for(int i = 0; i < array.length; i++) {
+
+                arrayDouble[i] = Double.parseDouble(array[i]);
+
+            }
+            double res = 0;
+            double variance = 0;
+            for(int i = 0; i < arrayDouble.length; i++) {
+                res += arrayDouble[i];
+            }
+            double moyenne = res / arrayDouble.length;
+            for(int i = 0; i < arrayDouble.length; i++) {
+                variance += Math.pow((arrayDouble[i] - moyenne), 2);
+            }
+            variance = variance / arrayDouble.length;
+            double ecarttype = Math.sqrt(variance);
+            System.out.println("Moyenne : "+moyenne);
+            System.out.println("Ecart-type : "+ecarttype);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

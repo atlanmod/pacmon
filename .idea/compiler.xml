@@ -6,11 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="energyInstrumentation" />
         <module name="facadePowerApi" />
         <module name="jvmMonitor" />
-        <module name="energyInstrumentation" />
         <module name="raplMonitor" />
+        <module name="threadLevelEnergy" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="energyInstrumentation" target="1.8" />
+      <module name="facadePowerApi" target="1.8" />
+      <module name="jPowerAPI" target="1.5" />
+      <module name="jvmMonitor" target="1.8" />
+      <module name="raplMonitor" target="1.8" />
+      <module name="threadLevelEnergy" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
