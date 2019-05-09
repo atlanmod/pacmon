@@ -17,13 +17,12 @@ public class App
     public static void main( String[] args )
     {
         String sPathValue = "./raplMonitor/src/main/resources/values.txt";
-        String sPathRes = "./raplMonitor/src/main/resources/resultatTER.txt";
         try {
 
-            Files.delete(Paths.get(sPathRes));
+            Files.delete(Paths.get(sPathValue));
 
 
-            Files.createFile(Paths.get(sPathRes));
+            Files.createFile(Paths.get(sPathValue));
         }
         catch (Exception e) {
             e.printStackTrace();
