@@ -32,9 +32,10 @@ public class App
         GlobalBufferWriter.getInstance("./raplMonitor/src/main/resources/values.txt");
         double total = 0;
         for(int i = 0; i < 100; i++) {
+            System.out.println(i+1+"% completed");
             double timestart = System.nanoTime();
             double start = RAPLMonitor.getEnergy();
-            double number = Math.pow(10, 1); // To change the number of Throws
+            double number = Math.pow(10, 6); // To change the number of Throws
             double res = computePI(number);
             double end = RAPLMonitor.getEnergy();
             double timeend = System.nanoTime();
