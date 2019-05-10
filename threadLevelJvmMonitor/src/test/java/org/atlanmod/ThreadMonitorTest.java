@@ -26,17 +26,17 @@ public class ThreadMonitorTest {
 
             System.out.println("Thread started: "+Thread.currentThread().getId());
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            for(long i = 0L; i < 99999999999L; ++i) {
+            for(long i = 0L; i < 99999999L; ++i) {
                 ++i;
             }
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -46,12 +46,14 @@ public class ThreadMonitorTest {
         });
 
         int tid = (int) t1.getId();
+
+        Monitor monitor = monitorBuilder.withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, tid)).build();
+        monitor.run(pid);
         t1.start();
 
-        Monitor monitor = monitorBuilder.withModule(new ThreadModule(new LinuxHelper(), 15d, 1d, tid)).build();
-        monitor.run(pid);
-
         while (t1.isAlive());
+
         monitor.stop();
+
     }
 }
