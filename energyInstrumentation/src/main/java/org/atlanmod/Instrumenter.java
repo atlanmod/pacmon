@@ -19,8 +19,12 @@ public class Instrumenter {
                 .with(new AgentBuilder.InitializationStrategy.SelfInjection.Eager())
                 .type(ElementMatchers.nameStartsWith(args))
                 .transform((builder, typeDescription, classLoader, javaModule) ->
-                        builder /*.method(ElementMatchers.any()).intercept(Advice.to(MonitorInterceptor.class))*/
-                                .method(ElementMatchers.named("main")).intercept(Advice.to(OnTheFlyAdvice.class))
+                        builder .method(ElementMatchers.named("main")).intercept(Advice.to(MonitorInterceptor.class))
+                                /*.method(ElementMatchers.any()).intercept(Advice.to(MethodTimeInterceptor.class))*/
+                                /*.method(ElementMatchers.named("main")).intercept(Advice.to(OnTheFlyAdvice.class))*/
+                )
+                .transform((builder, typeDescription, classLoader, javaModule) ->
+                        builder .method(ElementMatchers.any()).intercept(Advice.to(MethodTimeInterceptor.class))
                 )
                 .installOn(instrumentation);
     }

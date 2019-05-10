@@ -1,11 +1,11 @@
-package org.atlanmod;
+package benchmark;
 
 import java.util.Random;
 
 public class App {
 
     public static void main (String[] args) {
-        int numThrows = 20;
+        int numThrows = 10000000;
         double PI = computePI(numThrows);
 
         // Determine the difference from the PI constant defined in Math
