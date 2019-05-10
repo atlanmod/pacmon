@@ -34,7 +34,7 @@ public class App
         for(int i = 0; i < 100; i++) {
             double timestart = System.nanoTime();
             double start = RAPLMonitor.getEnergy();
-            double number = Math.pow(10, 7); // To change the number of Throws
+            double number = Math.pow(10, 1); // To change the number of Throws
             double res = computePI(number);
             double end = RAPLMonitor.getEnergy();
             double timeend = System.nanoTime();
@@ -91,8 +91,8 @@ public class App
             }
             variance = variance / arrayDouble.length;
             double ecarttype = Math.sqrt(variance);
-            System.out.println("Moyenne : "+moyenne);
-            System.out.println("Ecart-type : "+ecarttype);
+            System.out.println("Moyenne : "+moyenne/1000000);
+            System.out.println("Ecart-type : "+ecarttype/1000000);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
