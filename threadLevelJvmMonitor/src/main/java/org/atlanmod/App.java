@@ -13,7 +13,7 @@ public class App {
     public App() {
     }
 
-    public String run() {
+    public void run() {
         MonitorBuilder monitorBuilder = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
                 .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
@@ -51,8 +51,6 @@ public class App {
 
         while (t1.isAlive()) ;
         monitor.stop();
-
-        return display.getFileOutputPath();
     }
 
     public static void main(String[] args) throws Exception {

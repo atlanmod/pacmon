@@ -9,9 +9,9 @@ public class EnergyCalculator {
 
     }
 
-    public void run() {
+    public void run(String filePath) {
         try {
-            FileReader fileReader = new FileReader("./threadLevelJvmMonitor/src/main/resources/trace/15574985702428455608269019661338.txt");
+            FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             double energy = 0.0;
             String s1 = bufferedReader.readLine();
