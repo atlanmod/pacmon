@@ -16,7 +16,7 @@ public class PacmanPowerDisplay implements PowerDisplay {
     private FileOutputStream fileOutputStream;
     private String fileOutputPath;
 
-    PacmanPowerDisplay() {
+    public PacmanPowerDisplay() {
         try {
             file = new File("threadLevelJvmMonitor/src/main/resources/trace");
             if (!file.exists())
