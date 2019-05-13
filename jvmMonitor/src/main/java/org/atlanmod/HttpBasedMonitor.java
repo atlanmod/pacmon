@@ -38,6 +38,7 @@ public class HttpBasedMonitor {
             monitor.stop();
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
+
             trace = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".txt", file);
             monitor = buildMonitor();
         });
@@ -82,7 +83,7 @@ public class HttpBasedMonitor {
                     @Override
                     public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                         try {
-                            IOUtils.write(String.valueOf(power.toMilliWatts())+"-"+String.valueOf(timestamp)+";\n", fileOutputStreamMetrics);
+                            IOUtils.write(String.valueOf(timestamp)+":"+String.valueOf(power.toMilliWatts())+";\n", fileOutputStreamMetrics);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
