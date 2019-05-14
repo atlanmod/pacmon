@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PowerApiMonteCarlo implements BenchmarkMetrics {
 
-    private Monitor monitor;
+    private MonitorBuilder monitorBuilder;
     private Thread thread;
     private int pid;
     private String fileOutputPath;
@@ -23,10 +23,10 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
      *                        be done at a process level (with PowerAPI).
      */
     public PowerApiMonteCarlo(int numThrows, boolean withThreadLevel) {
-        MonitorBuilder monitorBuilder = new MonitorBuilder()
+        monitorBuilder = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
-                .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
-                .withTdp(47)
+                .withRefreshFrequency(20, TimeUnit.MILLISECONDS)
+                .withTdp(15)
                 .withTdpFactor(0.7);
 
         pid = (int) SystemUtils.getPID();
@@ -43,7 +43,9 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
             // -------------.
 
             System.out.println("done");
-            Thread.currentThread().interrupted();
+            //Thread.currentThread().interrupted();
+            //System.exit(1);
+            Thread.currentThread().stop();
         });
 
         int tid = (int) thread.getId();
@@ -59,11 +61,14 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
                 //.withChartDisplay()
                 .withCustomDisplay(display)
                 ;
+    }
 
-        monitor = monitorBuilder.build();
+    public void setMonitorFrequency(long frequency, TimeUnit unit) {
+        monitorBuilder.withRefreshFrequency(frequency, unit);
     }
 
     public String run() {
+        Monitor monitor = monitorBuilder.build();
         thread.start();
         monitor.run(pid);
         while (thread.isAlive());
