@@ -1,6 +1,7 @@
 package org.atlanmod.metrics;
 
 import org.atlanmod.*;
+import org.powerapi.core.LinuxHelper;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -39,10 +40,10 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
             double number = Math.pow(10, numThrows); // To change the number of Throws
             double res = computePI(number);
             System.out.println("résultat:" + res);
-            // -------------
+            // -------------.
 
             System.out.println("done");
-            //System.exit(1);
+            Thread.currentThread().interrupted();
         });
 
         int tid = (int) thread.getId();
@@ -52,7 +53,7 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
 
         //TODO :  Find a way to use ThreadModule
         if (withThreadLevel) {
-            //monitorBuilder = monitorBuilder.withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, tid));
+           //monitorBuilder = monitorBuilder.withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, tid));
         }
         monitorBuilder = monitorBuilder
                 //.withChartDisplay()
