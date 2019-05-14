@@ -26,7 +26,7 @@ public class PowerApiMonteCarlo implements BenchmarkMetrics {
         MonitorBuilder monitorBuilder = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
                 .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
-                .withTdp(15)
+                .withTdp(47)
                 .withTdpFactor(0.7);
 
         pid = (int) SystemUtils.getPID();

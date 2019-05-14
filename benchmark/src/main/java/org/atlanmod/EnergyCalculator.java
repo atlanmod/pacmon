@@ -9,11 +9,12 @@ public class EnergyCalculator {
 
     }
 
-    public void run(String filePath) {
+    public double run(String filePath) {
+        double energy = 0.0;
         try {
             FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            double energy = 0.0;
+
             String s1 = bufferedReader.readLine();
             String s2 = bufferedReader.readLine();
             while (s2 != null) {
@@ -26,6 +27,7 @@ public class EnergyCalculator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return energy;
     }
 
     private long getTime(String s) {
