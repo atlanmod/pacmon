@@ -9,13 +9,15 @@ import java.lang.reflect.Method;
 /**
  * Monitor to start the server
  */
-class MonitorInterceptor {
+class MonitorThreadLevelInterceptor {
 
     //called at the beginning of the method
     @Advice.OnMethodEnter
     static void enter(@Advice.Origin Method method, @Advice.Local("duration") Long duration) throws UnirestException {
 
-        Unirest.post("http://localhost:7070/start?pid="+SystemUtils.getPID())
+        String tid = String.valueOf(Thread.currentThread().getId());
+        System.out.println(tid);
+        Unirest.post("http://localhost:7070/startthreadlevel?pid="+SystemUtils.getPID()+"&tid="+tid)
                 .header("accept", "application/json")
                 .asJson()
                 .getStatus();
@@ -32,7 +34,7 @@ class MonitorInterceptor {
         Unirest.post("http://localhost:7070/endtime?methodName="+Thread.currentThread().getStackTrace()[1].getMethodName()+"&timestamp="+System.currentTimeMillis())
                 .header("accept", "application/json")
                 .asString();
-        Unirest.post("http://localhost:7070/stop")
+        Unirest.post("http://localhost:7070/stopthreadlevel")
                 .header("accept", "application/json")
                 .asJson()
                 .getStatus();

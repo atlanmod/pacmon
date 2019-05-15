@@ -3,7 +3,9 @@ package org.atlanmod;
 import io.javalin.Javalin;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
+import org.atlanmod.module.ThreadModule;
 import org.powerapi.PowerDisplay;
+import org.powerapi.core.LinuxHelper;
 import org.powerapi.core.power.Power;
 import org.powerapi.core.target.Target;
 import scala.collection.immutable.Set;
@@ -13,7 +15,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class HttpBasedMonitor {
-    private static Monitor monitor;
+    private static Monitor monitorPowerApi;
+    private static Monitor monitorThreadLevel;
     private static File file;
     private static File metrics;
     private static File timeStamps;
@@ -25,31 +28,46 @@ public class HttpBasedMonitor {
 
     public static void main(String[] args) throws IOException {
 
-        monitor = buildMonitor();
-
         Javalin javalin = Javalin.create();
 
         /*
         starts a monitor using powerAPI
          */
-        javalin.post("/start", ctx -> {
+        javalin.post("/startpowerapi", ctx -> {
             System.out.println("Received start signal.");
-            monitor.run(Integer.parseInt(ctx.req.getParameter("pid")));
+            monitorPowerApi = buildMonitorPowerApi();
+            monitorPowerApi.run(Integer.parseInt(ctx.req.getParameter("pid")));
+            ctx.status(HttpStatus.SC_ACCEPTED);
+        });
+
+        javalin.post("/startthreadlevel", ctx -> {
+            System.out.println("Received start signal.");
+            monitorThreadLevel = buildMonitorThreadLevel(ctx.req.getParameter("tid"));
+            monitorThreadLevel.run(Integer.parseInt(ctx.req.getParameter("pid")));
             ctx.status(HttpStatus.SC_ACCEPTED);
         });
 
         /*
         stops the monitor and interprets the results
          */
-        javalin.post("/stop", ctx -> {
-            monitor.stop();
+        javalin.post("/stoppowerapi", ctx -> {
+            monitorPowerApi.stop();
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
             interpretTrace();
 
             fileOutputStreamTimeStamp.close();
             fileOutputStreamMetrics.close();
-            monitor = buildMonitor();
+        });
+
+        javalin.post("/stopthreadlevel", ctx -> {
+            monitorThreadLevel.stop();
+            System.out.println("Received stop signal.");
+            ctx.status(HttpStatus.SC_ACCEPTED);
+            interpretTrace();
+
+            fileOutputStreamTimeStamp.close();
+            fileOutputStreamMetrics.close();
         });
 
         /*
@@ -79,12 +97,50 @@ public class HttpBasedMonitor {
 
     }
 
+    private static Monitor buildMonitorThreadLevel(String tid) throws IOException{
+
+        file = new File("./jvmMonitor/src/main/resources/trace");
+        if (!file.exists())
+            file.mkdirs();
+        metrics = File.createTempFile("metrics"+String.valueOf(System.currentTimeMillis()), ".txt", file);
+        fileOutputStreamMetrics = new FileOutputStream(metrics);
+
+        timeStamps = File.createTempFile("timeStamps"+String.valueOf(System.currentTimeMillis()), ".txt", file);
+        fileOutputStreamTimeStamp = new FileOutputStream(timeStamps);
+
+        System.out.println("Trace writing in "+file.getAbsolutePath());
+        //TODO: Change writing system to binary
+
+        MonitorBuilder monitorBuilder = new MonitorBuilder()
+                .withDuration(60, TimeUnit.SECONDS)
+                .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
+                .withTdp(15)
+                .withTdpFactor(0.7);
+
+        Monitor monitor = monitorBuilder
+                .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, Integer.getInteger(tid)))
+                //.withChartDisplay()
+                .withCustomDisplay(new PowerDisplay() {
+                    @Override
+                    public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
+                        try {
+                            IOUtils.write(String.valueOf(timestamp)+":"+String.valueOf(power.toMilliWatts())+"\n", fileOutputStreamMetrics);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .build();
+
+        return monitor;
+    }
+
     /**
-     * build a monitorn using powerAPI
+     * build a monitor using powerAPI
      * @return
      * @throws IOException
      */
-    private static Monitor buildMonitor() throws IOException {
+    private static Monitor buildMonitorPowerApi() throws IOException {
 
         file = new File("./jvmMonitor/src/main/resources/trace");
         if (!file.exists())

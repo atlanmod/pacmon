@@ -22,9 +22,8 @@ public class Instrumenter {
                         builder .method(ElementMatchers.any()).intercept(Advice.to(MethodTimeInterceptor.class))
                 )
                 .transform((builder, typeDescription, classLoader, javaModule) ->
-                        builder .method(ElementMatchers.named("main")).intercept(Advice.to(MonitorInterceptor.class))
-                                /*.method(ElementMatchers.any()).intercept(Advice.to(MethodTimeInterceptor.class))*/
-                                /*.method(ElementMatchers.named("main")).intercept(Advice.to(OnTheFlyAdvice.class))*/
+                        builder //.method(ElementMatchers.named("main")).intercept(Advice.to(MonitorPowerApiInterceptor.class))
+                                .method(ElementMatchers.named("main")).intercept(Advice.to(MonitorThreadLevelInterceptor.class))
                 )
                 .installOn(instrumentation);
     }
