@@ -14,21 +14,10 @@ import java.nio.file.Paths;
 public class App {
 
     public static void main(String[] args) {
-        String sPathValue = "./benchmark/src/main/resources/values.txt";
         int numberOfTests = 10;
         Double[] results = new Double[numberOfTests];
-        try {
+        BenchmarkMetrics benchmarkMetrics;
 
-            Files.delete(Paths.get(sPathValue));
-
-
-            Files.createFile(Paths.get(sPathValue));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        GlobalBufferWriter.getInstance("./benchmark/src/main/resources/values.txt");
-        double total = 0;
-        BenchmarkMetrics benchmarkMetrics = null;
         for (int i = 0; i < numberOfTests; i++) {
             benchmarkMetrics = new PowerApiMonteCarlo(8, false);
 
@@ -37,6 +26,10 @@ public class App {
             System.out.println(" -- Starting energy computing --");
 
             results[i] = new EnergyCalculator().run(filePath);
+        }
+
+        for (int i = 0; i < results.length; i++) {
+            System.out.print(results[i] + ";");
         }
 
         double res = 0;
@@ -52,6 +45,8 @@ public class App {
         double ecarttype = Math.sqrt(variance);
         System.out.println("Moyenne : "+moyenne/1000);
         System.out.println("Ecart-type : "+ecarttype/1000);
+
+        System.exit(1);
     }
 
 }
