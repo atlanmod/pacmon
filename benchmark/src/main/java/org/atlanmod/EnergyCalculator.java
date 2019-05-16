@@ -15,6 +15,7 @@ public class EnergyCalculator {
             FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
+            System.out.println("reading file " + filePath);
             String s1 = bufferedReader.readLine();
             String s2 = bufferedReader.readLine();
             while (s2 != null) {

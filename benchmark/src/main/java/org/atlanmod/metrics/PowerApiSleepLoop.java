@@ -93,7 +93,7 @@ public class PowerApiSleepLoop implements BenchmarkMetrics {
         //System.out.println("byebye");
     }
 
-    public static void addMethod(){
+    public void addMethod(){
         for(long i = 0L; i < 999999999L; ++i) {
             ++i;
         }
