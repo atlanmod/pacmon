@@ -111,25 +111,21 @@ public class HttpBasedMonitor {
         System.out.println("Trace writing in "+file.getAbsolutePath());
         //TODO: Change writing system to binary
 
-        MonitorBuilder monitorBuilder = new MonitorBuilder()
-                .withDuration(60, TimeUnit.SECONDS)
-                .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
-                .withTdp(15)
-                .withTdpFactor(0.7);
-
-        Monitor monitor = monitorBuilder
-                .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, Integer.getInteger(tid)))
-                //.withChartDisplay()
+        Monitor monitor = new MonitorBuilder()
                 .withCustomDisplay(new PowerDisplay() {
                     @Override
                     public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                         try {
-                            IOUtils.write(String.valueOf(timestamp)+":"+String.valueOf(power.toMilliWatts())+"\n", fileOutputStreamMetrics);
+                            IOUtils.write(String.valueOf(timestamp).concat(":").concat(String.valueOf(power.toMilliWatts())).concat("\n"), fileOutputStreamMetrics);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 })
+                .withTdp(15)
+                .withTdpFactor(0.7)
+                .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
+                .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, Integer.valueOf(tid)))
                 .build();
 
         return monitor;

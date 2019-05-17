@@ -26,8 +26,8 @@ class ThreadPowerSensor(eventBus: MessageBus, muid: UUID, target: Target, osHelp
   def terminate(): Unit = unsubscribeMonitorTick(muid, target)(eventBus)(self)
 
   def currentTimes(): (Long, Long) = {
-    proxyClient.flush()
-    (threadMXBean.getThreadCpuTime(tid), proxyClient.getProcessCpuTime)
+
+    (threadMXBean.getThreadUserTime(tid), (osHelper.getGlobalCpuTimes.idleTime + osHelper.getGlobalCpuTimes.activeTime)*10000) //looking for Nanoseconds
   }
 
   def usageRatio(oldThread: Long, newThread: Long, oldCpu: Long, newCpu: Long): TargetUsageRatio = {
