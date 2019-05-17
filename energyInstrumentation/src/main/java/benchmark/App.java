@@ -14,9 +14,9 @@ public class App {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("I'm awake");
+
         addMethod();
-        System.out.println("I finished adding");
+
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
