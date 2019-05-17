@@ -48,7 +48,7 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <main-Class>org.atlanmod.App</main-Class>
+                            <main-Class>benchmark.App</main-Class>
                             <Premain-Class>org.atlanmod.Instrumenter</Premain-Class>
                         </manifestEntries>
                     </archive>

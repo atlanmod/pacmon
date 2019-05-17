@@ -5,11 +5,17 @@ import java.io.FileReader;
 
 public class EnergyCalculator {
 
-    public static void main(String[] args) {
+    public EnergyCalculator() {
+
+    }
+
+    public double run(String filePath) {
+        double energy = 0.0;
         try {
-            FileReader fileReader = new FileReader("./threadLevelJvmMonitor/src/main/resources/trace/15574087388181066025520857520133.txt");
+            FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            double energy = 0.0;
+
+            System.out.println("reading file " + filePath);
             String s1 = bufferedReader.readLine();
             String s2 = bufferedReader.readLine();
             while (s2 != null) {
@@ -22,13 +28,14 @@ public class EnergyCalculator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return energy;
     }
 
-    private static long getTime(String s) {
+    private long getTime(String s) {
         return Long.parseLong(s.split(":")[0]);
     }
 
-    private static double getPower(String s) {
+    private double getPower(String s) {
         return Double.parseDouble((s.split(":")[1]));
     }
 
