@@ -1,6 +1,7 @@
 package org.atlanmod;
 
 import org.atlanmod.module.ThreadModule;
+import org.atlanmod.reporter.PacmonChartDisplay;
 import org.powerapi.PowerDisplay;
 import org.powerapi.core.LinuxHelper;
 
@@ -16,23 +17,31 @@ public class App {
     public void run() {
         MonitorBuilder monitorBuilder = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
-                .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
+                .withRefreshFrequency(500, TimeUnit.NANOSECONDS)
                 .withTdp(15)
                 .withTdpFactor(0.7);
 
         int pid = (int) SystemUtils.getPID();
 
         Thread t1 = new Thread(() -> {
-            Thread.currentThread().setName("MY BIG PHAT THREAD ");
+            Thread.currentThread().setName("Massive thread");
 
             System.out.println("Thread started: " + Thread.currentThread().getId());
-
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             // -------------
             double number = Math.pow(10, 8); // To change the number of Throws
             double res = computePI(number);
             System.out.println("résultat:" + res);
             // -------------
-
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("done");
             System.exit(1);
         });
@@ -40,12 +49,9 @@ public class App {
         int tid = (int) t1.getId();
         t1.start();
 
-        RatalPowerDisplay display = new RatalPowerDisplay();
-
         Monitor monitor = monitorBuilder
                 .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, tid))
-                //.withChartDisplay()
-                .withCustomDisplay(display)
+                .withCustomDisplay(new PacmonChartDisplay())
                 .build();
         monitor.run(pid);
 
