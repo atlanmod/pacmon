@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pacmon</artifactId>
-        <groupId>org.org.atlanmod</groupId>
+        <groupId>org.atlanmod</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -49,11 +49,6 @@
     </pluginRepositories>
 -->
     <dependencies>
-        <dependency>
-            <groupId>com.jvmtop</groupId>
-            <artifactId>jvmtop</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
