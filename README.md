@@ -16,3 +16,24 @@ Level_Of_Accuracy can either be ***process*** or ***thread***, depending on the 
 For exemple:
 
 `java -javaagent:target/energyInstrumentation-1.0-SNAPSHOT-jar-with-dependencies.jar=benchmark,main,thread -jar target/energyInstrumentation-1.0-SNAPSHOT-jar-with-dependencies.jar`
+
+## Power Model
+
+Considering PowerAPI power model we determine the following formula:
+
+![formulae](https://user-images.githubusercontent.com/6909730/58875234-43790b00-86cb-11e9-82fd-81a9ef1b04ed.png)
+
+From this formula, we deduce the following formula for estimating the thread level energy consumption:
+
+![formula2](https://user-images.githubusercontent.com/6909730/58875249-4ecc3680-86cb-11e9-8daa-3986ed72d192.png)
+
+![formula3](https://user-images.githubusercontent.com/6909730/58875273-5ee41600-86cb-11e9-9daa-13fdde2560af.png)
+
+## Evaluation
+
+We compared Pacmon to jRAPL and PowerAPI (SimpleCPUModule):
+
+![chart1](https://user-images.githubusercontent.com/6909730/58875264-58559e80-86cb-11e9-9df1-e7a5a3d6250a.png)
+
+![chart2](https://user-images.githubusercontent.com/6909730/58875270-5be92580-86cb-11e9-8f63-4a235be57abf.png)
+
