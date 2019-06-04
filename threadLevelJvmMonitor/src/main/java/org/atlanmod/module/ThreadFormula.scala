@@ -23,7 +23,7 @@ class ThreadFormula(eventBus: MessageBus, muid: UUID, target: Target, tdp: Doubl
         val power = {
 
           try {
-            ((tdp * tdpFactor) * msg.targetRatio.ratio).W
+            (((tdp * tdpFactor) * msg.targetRatio.ratio).W)/1000 //translating from mW to W
           }
           catch {
             case _: Exception =>

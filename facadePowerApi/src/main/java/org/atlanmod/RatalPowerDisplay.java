@@ -38,4 +38,12 @@ public class RatalPowerDisplay implements PowerDisplay {
         }
     }
 
+    public FileOutputStream getFileOutputStream(){
+        return fileOutputStream;
+    }
+
+    public File getFile(){
+        return file;
+    }
+
 }
