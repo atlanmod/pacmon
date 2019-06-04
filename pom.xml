@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>powerapi</module>
         <module>instrumentation</module>
-        <module>jvm</module>
-        <module>monitor</module>
+        <module>server</module>
+        <module>thread</module>
+        <module>process</module>
         <module>system</module>
     </modules>
 

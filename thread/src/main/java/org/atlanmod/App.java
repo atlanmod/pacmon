@@ -2,10 +2,8 @@ package org.atlanmod;
 
 import org.atlanmod.module.ThreadModule;
 import org.atlanmod.reporter.PacmonChartDisplay;
-import org.powerapi.PowerDisplay;
 import org.powerapi.core.LinuxHelper;
 
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
