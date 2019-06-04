@@ -9,11 +9,11 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>facadePowerApi</module>
-        <module>energyInstrumentation</module>
-        <module>threadLevelJvmMonitor</module>
-        <module>jvmMonitor</module>
-        <module>raplMonitor</module>
+        <module>powerapi</module>
+        <module>instrumentation</module>
+        <module>jvm</module>
+        <module>monitor</module>
+        <module>system</module>
     </modules>
 
     <dependencies>
