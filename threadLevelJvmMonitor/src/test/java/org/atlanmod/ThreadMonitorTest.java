@@ -1,6 +1,7 @@
 package org.atlanmod;
 
 import org.atlanmod.module.ThreadModule;
+import org.atlanmod.reporter.PacmonChartDisplay;
 import org.junit.Test;
 import org.powerapi.core.LinuxHelper;
 
@@ -15,7 +16,7 @@ public class ThreadMonitorTest {
                 .withRefreshFrequency(10, TimeUnit.MILLISECONDS)
                 .withTdp(15)
                 .withTdpFactor(0.7)
-                .withChartDisplay();
+                .withCustomDisplay(new PacmonChartDisplay());
 
 
 
