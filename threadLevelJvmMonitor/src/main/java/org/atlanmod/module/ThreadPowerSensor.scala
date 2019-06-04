@@ -3,8 +3,7 @@ package org.atlanmod.module
 import java.util.UUID
 
 import akka.actor.Actor
-import com.jvmtop.monitor.VMInfo
-import com.jvmtop.openjdk.tools.LocalVirtualMachine
+import org.atlanmod.helpers.MBeanHelper
 import org.powerapi.core.MonitorChannel.{MonitorTick, subscribeMonitorTick, unsubscribeMonitorTick}
 import org.powerapi.core.target.{Target, TargetUsageRatio}
 import org.powerapi.core.{MessageBus, OSHelper}
@@ -14,12 +13,12 @@ import org.powerapi.module.cpu.UsageMetricsChannel.publishUsageReport
 
 class ThreadPowerSensor(eventBus: MessageBus, muid: UUID, target: Target, osHelper: OSHelper, tid: Int) extends Sensor(eventBus, muid, target) {
 
-  private val vmInfo = VMInfo.processNewVM(LocalVirtualMachine.getLocalVirtualMachine(osHelper.getProcesses(target).head.pid), 1)
-  private val proxyClient = vmInfo.getProxyClient
-  private val threadMXBean = vmInfo.getThreadMXBean
+  private val connection = MBeanHelper.connectToLocalVM(osHelper.getProcesses(target).head.pid)
+  private val threadMXBean = MBeanHelper.getThreadMXBean(connection)
 
   def init(): Unit = {
     println("Starting monitoring JVM process "+target+" on Thread ID "+tid)
+
     subscribeMonitorTick(muid, target)(eventBus)(self)
   }
 
