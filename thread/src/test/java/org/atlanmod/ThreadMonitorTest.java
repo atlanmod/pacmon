@@ -3,8 +3,13 @@ package org.atlanmod;
 import org.atlanmod.module.ThreadModule;
 import org.atlanmod.reporter.PacmonChartDisplay;
 import org.junit.Test;
+import org.powerapi.PowerDisplay;
 import org.powerapi.core.LinuxHelper;
+import org.powerapi.core.power.Power;
+import org.powerapi.core.target.Target;
+import scala.collection.immutable.Set;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class ThreadMonitorTest {
@@ -16,7 +21,12 @@ public class ThreadMonitorTest {
                 .withRefreshFrequency(10, TimeUnit.MILLISECONDS)
                 .withTdp(15)
                 .withTdpFactor(0.7)
-                .withCustomDisplay(new PacmonChartDisplay());
+                .withCustomDisplay(new PowerDisplay() {
+                    @Override
+                    public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
+
+                    }
+                });
 
 
 
