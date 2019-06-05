@@ -9,4 +9,4 @@ install:
 script:
  - mvn initialize
  - mvn clean install -DskipTests=true
- - mvn package -Dmaven.test.failure.ignore=true
+ - mvn package
