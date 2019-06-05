@@ -7,7 +7,8 @@
     <groupId>org.atlanmod</groupId>
     <artifactId>pacmon</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
+
     <modules>
         <module>instrumentation</module>
         <module>server</module>
@@ -16,6 +17,9 @@
         <module>system</module>
     </modules>
 
+    <properties>
+        <revision>1.0.0</revision>
+    </properties>
     <dependencies>
 
     </dependencies>

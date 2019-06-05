@@ -13,7 +13,7 @@ public class TestHttpBasedMonitor {
     public void checkMainMethod() throws UnirestException, InterruptedException, IOException {
         HttpBasedMonitor.main(new String[]{});
 
-        int status = Unirest.post("http://localhost:7070/start?pid="+SystemUtils.getPID())
+        int status = Unirest.post("http://localhost:7070/startpowerapi?pid="+SystemUtils.getPID())
                 .header("accept", "application/json")
                 .asJson()
                 .getStatus();
@@ -25,7 +25,7 @@ public class TestHttpBasedMonitor {
         Thread.sleep(5000);
         System.out.println("Done sleeping");
 
-        status= Unirest.post("http://localhost:7070/stop")
+        status= Unirest.post("http://localhost:7070/stoppowerapi")
                 .header("accept", "application/json")
                 .asJson()
                 .getStatus();

@@ -70,10 +70,10 @@ public class MonitorBuilderTest
         monitor.stop();
     }
 
+    protected Map<Power, Long> powers = new HashMap<>();
+
     @Test
     public void checkPowerAPIMonitorCustomDisplay() throws InterruptedException {
-
-        Map<Power, Long> powers = new HashMap<>();
 
         Monitor monitor = new MonitorBuilder()
                 .withDuration(60, TimeUnit.SECONDS)
@@ -90,7 +90,7 @@ public class MonitorBuilderTest
 
         monitor.run((int) SystemUtils.getPID());
 
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         long k = 0;
 
@@ -103,9 +103,10 @@ public class MonitorBuilderTest
         monitor.stop();
 
         Double averagePower = powers.keySet().stream().map(Power::toWatts).mapToDouble(d -> d).average().orElse(0); //Average power consumpion during loop execution
+        System.out.println("Average Power consumed (W): "+averagePower);
+
         double duration = ((Collections.max(powers.values()) - Collections.min(powers.values())) / 1000D);
 
-        System.out.println("Average Power consumed (W): "+averagePower);
         System.out.println("Duration (s): "+duration);
         System.out.println("Energy Consumed (J): "+duration*averagePower);
 

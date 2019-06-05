@@ -43,7 +43,6 @@ public class ThreadMonitorTest {
             }
 
             System.out.println("done");
-            System.exit(1);
         });
 
         int tid = (int) t1.getId();
