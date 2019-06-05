@@ -1,4 +1,4 @@
-# PACMON
+# PACMON  ![](https://travis-ci.org/atlanmod/pacmon.svg?branch=master)
 PACMON is an extension of **[PowerApi](https://github.com/powerapi-ng/powerapi-scala)**. PACMON allows to easily measure the energy consumed by a Java application at the thread-level. 
 
 ## Instrumentation
