@@ -1,5 +1,6 @@
 package org.atlanmod;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.powerapi.PowerDisplay;
 import org.powerapi.core.power.Power;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class MonitorBuilderTest
 {
 
+    @Ignore
     @Test
     public void checkPowerAPIMonitorChartDisplay() throws InterruptedException {
 
