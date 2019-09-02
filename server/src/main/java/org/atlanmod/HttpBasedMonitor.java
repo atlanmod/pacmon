@@ -1,5 +1,6 @@
 package org.atlanmod;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.javalin.Javalin;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -11,6 +12,8 @@ import org.powerapi.core.target.Target;
 import scala.collection.immutable.Set;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -23,20 +26,30 @@ public class HttpBasedMonitor {
     private static FileOutputStream fileOutputStreamMetrics;
     private static FileOutputStream fileOutputStreamTimeStamp;
     private static FileOutputStream fileOutputStreamResults;
-
-
+    private static Javalin javalin;
 
     public static void main(String[] args) throws IOException {
 
-        Javalin javalin = Javalin.create();
+        javalin = Javalin.create();
 
         /*
         starts a monitor using powerAPI
          */
         javalin.post("/startpowerapi", ctx -> {
-            System.out.println("Received start signal.");
+            if (monitorPowerApi != null)
+                throw new Exception("A monitor is already running. Interruption.");
+
+            int pid = Integer.parseInt(ctx.req.getParameter("pid"));
+            String repo = ctx.req.getParameter("uri");
+
+            if (repo == null) {
+                file = new File("trace");
+            } else {
+                file = new File(repo);
+            }
+
             monitorPowerApi = buildMonitorPowerApi();
-            monitorPowerApi.run(Integer.parseInt(ctx.req.getParameter("pid")));
+            monitorPowerApi.run(pid);
             ctx.status(HttpStatus.SC_ACCEPTED);
         });
 
@@ -51,7 +64,9 @@ public class HttpBasedMonitor {
         stops the monitor and interprets the results
          */
         javalin.post("/stoppowerapi", ctx -> {
+
             monitorPowerApi.stop();
+            monitorPowerApi = null;
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
             interpretTrace();
@@ -76,7 +91,7 @@ public class HttpBasedMonitor {
         javalin.post("/begintime", ctx -> {
             System.out.println("Received start timestamp signal.");
             try {
-                IOUtils.write("Start "+ctx.req.getParameter("methodName")+" "+ctx.req.getParameter("timestamp")+"\n", fileOutputStreamTimeStamp);
+                IOUtils.write("Start "+ctx.req.getParameter("name")+" "+ctx.req.getParameter("timestamp")+"\n", fileOutputStreamTimeStamp);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,31 +102,50 @@ public class HttpBasedMonitor {
          */
         javalin.post("/endtime", ctx -> {
             try {
-                IOUtils.write("End "+ctx.req.getParameter("methodName")+" "+ctx.req.getParameter("timestamp")+"\n", fileOutputStreamTimeStamp);
+                IOUtils.write("End "+ctx.req.getParameter("name")+" "+ctx.req.getParameter("timestamp")+"\n", fileOutputStreamTimeStamp);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-        javalin.start(7070);
+        javalin.get("/ready", ctx -> {
+            ctx.status(201);
+        });
 
+        javalin.post("/stop", ctx -> {
+            new Thread(new StopServer()).start();
+            ctx.status(200);
+        });
+
+        javalin.start(7070);
+    }
+
+    static class StopServer implements Runnable  {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            javalin.stop();
+        }
     }
 
     private static Monitor buildMonitorThreadLevel(String tid) throws IOException{
 
-        file = new File("./jvmMonitor/src/main/resources/trace");
         if (!file.exists())
             file.mkdirs();
+
         metrics = File.createTempFile("metrics"+String.valueOf(System.currentTimeMillis()), ".txt", file);
         fileOutputStreamMetrics = new FileOutputStream(metrics);
 
-        timeStamps = File.createTempFile("timeStamps"+String.valueOf(System.currentTimeMillis()), ".txt", file);
+        timeStamps = File.createTempFile("timestamps"+String.valueOf(System.currentTimeMillis()), ".txt", file);
         fileOutputStreamTimeStamp = new FileOutputStream(timeStamps);
 
-        System.out.println("Trace writing in "+file.getAbsolutePath());
         //TODO: Change writing system to binary
 
-        Monitor monitor = new MonitorBuilder()
+        org.atlanmod.Monitor monitor = new MonitorBuilder()
                 .withCustomDisplay(new PowerDisplay() {
                     @Override
                     public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
@@ -138,16 +172,15 @@ public class HttpBasedMonitor {
      */
     private static Monitor buildMonitorPowerApi() throws IOException {
 
-        file = new File("./jvmMonitor/src/main/resources/trace");
-        if (!file.exists())
+        if (file != null && !file.exists())
             file.mkdirs();
+
         metrics = File.createTempFile("metrics"+String.valueOf(System.currentTimeMillis()), ".txt", file);
         fileOutputStreamMetrics = new FileOutputStream(metrics);
 
         timeStamps = File.createTempFile("timeStamps"+String.valueOf(System.currentTimeMillis()), ".txt", file);
         fileOutputStreamTimeStamp = new FileOutputStream(timeStamps);
 
-        System.out.println("Trace writing in "+file.getAbsolutePath());
         //TODO: Change writing system to binary
 
         return new MonitorBuilder()
