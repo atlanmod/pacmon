@@ -170,7 +170,7 @@ public class HttpBasedMonitor {
      * @return
      * @throws IOException
      */
-    private static Monitor buildMonitorPowerApi() throws IOException {
+    protected static Monitor buildMonitorPowerApi() throws IOException {
 
         if (file != null && !file.exists())
             file.mkdirs();
