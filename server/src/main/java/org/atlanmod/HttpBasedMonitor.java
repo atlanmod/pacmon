@@ -17,19 +17,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class HttpBasedMonitor {
-    private static Monitor monitorPowerApi;
-    private static Monitor monitorThreadLevel;
-    private static File file;
-    private static File metrics;
-    private static File timeStamps;
-    private static FileOutputStream fileOutputStreamMetrics;
-    private static FileOutputStream fileOutputStreamTimeStamp;
-    private static FileOutputStream fileOutputStreamResults;
-    private static Javalin javalin;
+public class HttpBasedMonitor implements Runnable {
+    private  Monitor monitorPowerApi;
+    private  Monitor monitorThreadLevel;
+    private  File file;
+    private  File metrics;
+    private  File timeStamps;
+    private  FileOutputStream fileOutputStreamMetrics;
+    private  FileOutputStream fileOutputStreamTimeStamp;
+    private  FileOutputStream fileOutputStreamResults;
+    private  Javalin javalin;
 
-    public static void main(String[] args) throws IOException {
-
+    @Override
+    public void run() {
         javalin = Javalin.create();
 
         /*
@@ -69,7 +69,7 @@ public class HttpBasedMonitor {
             monitorPowerApi = null;
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
-            interpretTrace();
+            //interpretTrace();
 
             fileOutputStreamTimeStamp.close();
             fileOutputStreamMetrics.close();
@@ -79,7 +79,7 @@ public class HttpBasedMonitor {
             monitorThreadLevel.stop();
             System.out.println("Received stop signal.");
             ctx.status(HttpStatus.SC_ACCEPTED);
-            interpretTrace();
+            //interpretTrace();
 
             fileOutputStreamTimeStamp.close();
             fileOutputStreamMetrics.close();
@@ -113,14 +113,15 @@ public class HttpBasedMonitor {
         });
 
         javalin.post("/stop", ctx -> {
-            new Thread(new StopServer()).start();
+            Thread t1 = new Thread(new StopServer());
+            t1.start();
             ctx.status(200);
         });
 
         javalin.start(7070);
     }
 
-    static class StopServer implements Runnable  {
+    class StopServer implements Runnable  {
         @Override
         public void run() {
             try {
@@ -132,7 +133,7 @@ public class HttpBasedMonitor {
         }
     }
 
-    private static Monitor buildMonitorThreadLevel(String tid) throws IOException{
+    private  Monitor buildMonitorThreadLevel(String tid) throws IOException{
 
         if (!file.exists())
             file.mkdirs();
@@ -170,7 +171,7 @@ public class HttpBasedMonitor {
      * @return
      * @throws IOException
      */
-    protected static Monitor buildMonitorPowerApi() throws IOException {
+    protected  Monitor buildMonitorPowerApi() throws IOException {
 
         if (file != null && !file.exists())
             file.mkdirs();
@@ -203,7 +204,7 @@ public class HttpBasedMonitor {
     /**
      * This method is used to interpret the trace files created by monitoring the execution of a jar file
      */
-    private static void interpretTrace(){
+    private  void interpretTrace(){
 
         FileReader fileReader = null;
         try {
@@ -270,7 +271,7 @@ public class HttpBasedMonitor {
      * @param endTimeStamp
      * @param methodName
      */
-    private static void computeEnergy(String beginTimeStamp, String endTimeStamp, String methodName){
+    private  void computeEnergy(String beginTimeStamp, String endTimeStamp, String methodName){
         try {
             FileReader fileReader = new FileReader(metrics);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -305,7 +306,7 @@ public class HttpBasedMonitor {
      * @param s
      * @return
      */
-    private static long getTime(String s) {
+    private  long getTime(String s) {
         return Long.parseLong(s.split(":")[0]);
     }
 
@@ -314,7 +315,7 @@ public class HttpBasedMonitor {
      * @param s
      * @return
      */
-    private static double getPower(String s) {
+    private  double getPower(String s) {
         return Double.parseDouble((s.split(":")[1]));
     }
 
@@ -324,7 +325,7 @@ public class HttpBasedMonitor {
      * @param time Time in milliseconds as a long
      * @return Energy in milliJoules as a double
      */
-    public static double powerToEnergy(double power, long time) {
+    public  double powerToEnergy(double power, long time) {
         return power*time/1000;
     }
 }

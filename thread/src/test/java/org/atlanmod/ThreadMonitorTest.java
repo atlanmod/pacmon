@@ -27,9 +27,6 @@ public class ThreadMonitorTest {
 
                     }
                 });
-
-
-
         int pid = (int) SystemUtils.getPID();
 
         Thread t1 = new Thread(() -> {
@@ -64,6 +61,5 @@ public class ThreadMonitorTest {
         while (t1.isAlive());
 
         monitor.stop();
-
     }
 }

@@ -1,8 +1,6 @@
 package org.atlanmod;
 
-import io.mappedbus.MappedBusReader;
 import io.mappedbus.MappedBusWriter;
-import org.apache.commons.io.IOUtils;
 import org.atlanmod.module.ThreadModule;
 import org.powerapi.PowerDisplay;
 import org.powerapi.core.LinuxHelper;
@@ -10,7 +8,9 @@ import org.powerapi.core.power.Power;
 import org.powerapi.core.target.Target;
 import scala.collection.immutable.Set;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -20,21 +20,6 @@ public class MappedBusBasedMonitor implements Runnable {
     private int pid;
     private Monitor monitor;
 
-    /**
-     *
-     * @param args Arguments.
-     * arg[0] : pid to track
-     *
-     */
-    public static void main(String[] args) {
-        if (args.length < 2) {
-            throw new RuntimeException("arg[0]: pid ; arg[1]: repo");
-        }
-
-        MappedBusBasedMonitor mappedBusBasedMonitor = new MappedBusBasedMonitor(new File(args[1]), Integer.parseInt(args[0]));
-        mappedBusBasedMonitor.run();
-    }
-
     public MappedBusBasedMonitor(File repo, int pid) {
         this.repo = repo;
         this.pid = pid;
@@ -42,56 +27,38 @@ public class MappedBusBasedMonitor implements Runnable {
 
     @Override
     public void run() {
-        try {
-            monitor = buildMonitorPowerApi();
-            monitor.run(pid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        monitor.run(pid);
     }
-
-    /**
-     * Stop the monitor
-     */
-    public static synchronized void stop() {
-        
-    }
-
 
     /**
      * build a monitor using pacmon
      * @param tid the thread id observed
-     * @return a {@link Monitor}
      * @throws IOException
      */
-    private Monitor buildMonitorThreadLevel(String tid) throws IOException{
+    public void buildMonitorThreadLevel(int tid) throws IOException{
         MappedBusWriter mappedBusWriter = buildPowerMappedBusWriter();
 
-        return new MonitorBuilder()
+        monitor = new MonitorBuilder()
                 .withCustomDisplay(buildPowerDisplay(mappedBusWriter))
                 .withTdp(15)
                 .withTdpFactor(0.7)
                 .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
-                .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, Integer.parseInt(tid)))
+                .withModule(new ThreadModule(new LinuxHelper(), 15d, 0.7d, tid))
                 .build();
     }
 
     /**
      * build a monitor using powerAPI
      * @return a {@link Monitor}
-     * @throws IOException
      */
-    protected Monitor buildMonitorPowerApi() throws IOException {
-
+    public void buildMonitorPowerApi() throws IOException {
         MappedBusWriter mappedBusWriter = buildPowerMappedBusWriter();
-
-        return new MonitorBuilder()
+        monitor = new MonitorBuilder()
                 .withCustomDisplay(buildPowerDisplay(mappedBusWriter))
                 .withTdp(15.0)
                 .withTdpFactor(0.7)
                 .withRefreshFrequency(50, TimeUnit.MILLISECONDS)
                 .build();
-
     }
 
     /**
@@ -105,7 +72,7 @@ public class MappedBusBasedMonitor implements Runnable {
 
         File output = File.createTempFile("power", "", repo);
 
-        MappedBusWriter writer = new MappedBusWriter(output.getAbsolutePath(), 100000L, 32);
+        MappedBusWriter writer = new MappedBusWriter(output.getAbsolutePath(), 200000L, 32);
 
         try {
             writer.open();
@@ -125,6 +92,7 @@ public class MappedBusBasedMonitor implements Runnable {
             @Override
             public void display(UUID muid, long timestamp, Set<Target> targets, Set<String> devices, Power power) {
                 try {
+                    System.out.println("power: "+power);
                     mappedBusWriter.write(new MappedBusFloat((float) power.toMilliWatts()));
                 } catch (EOFException e) {
                     e.printStackTrace();

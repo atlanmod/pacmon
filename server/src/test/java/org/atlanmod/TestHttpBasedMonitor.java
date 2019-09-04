@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.jetty.util.log.Log;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import sun.net.www.http.HttpClient;
@@ -23,7 +24,7 @@ public class TestHttpBasedMonitor {
 
     @Test
     public void checkMainMethod() throws UnirestException, InterruptedException, IOException {
-        HttpBasedMonitor.main(new String[]{});
+        new HttpBasedMonitor().run();
 
         int status = Unirest.post("http://localhost:7070/startpowerapi?pid="+SystemUtils.getPID())
                 .header("accept", "application/json")
@@ -43,12 +44,17 @@ public class TestHttpBasedMonitor {
                 .getStatus();
 
         Assert.assertEquals(202, status);
+
+        Unirest.post("http://localhost:7070/stoppowerapi")
+                .header("accept", "application/json")
+                .asJson()
+                .getStatus();
     }
 
     @Test
     public void checkMainMethodWithFileParameter() throws IOException, UnirestException {
         File file = Files.createTempDir();
-        HttpBasedMonitor.main(new String[]{});
+        new HttpBasedMonitor().run();
 
         int status = Unirest.post("http://localhost:7070/startpowerapi?pid="+SystemUtils.getPID()+"&uri="+file.getAbsolutePath())
                 .header("accept", "application/json")
@@ -60,12 +66,17 @@ public class TestHttpBasedMonitor {
         java.nio.file.Files.walk(file.toPath()).forEach(System.out::println);
         Assert.assertTrue(file.exists());
         Assert.assertTrue(java.nio.file.Files.walk(file.toPath()).count() > 0);
+
+        Unirest.post("http://localhost:7070/stoppowerapi")
+                .header("accept", "application/json")
+                .asJson()
+                .getStatus();
     }
 
     @Test
     public void checkServerStop() throws IOException, UnirestException {
 
-        HttpBasedMonitor.main(new String[]{});
+        new HttpBasedMonitor().run();
         int status = Unirest.post("http://localhost:7070/startpowerapi?pid="+SystemUtils.getPID())
                 .header("accept", "application/json")
                 .asJson()
@@ -110,7 +121,8 @@ public class TestHttpBasedMonitor {
         File f = new File("trace"+System.currentTimeMillis());
         Assert.assertTrue(f.mkdir());
 
-        HttpBasedMonitor.main(new String[]{});
+        new HttpBasedMonitor().run();
+
         int status = Unirest.post("http://localhost:7070/startpowerapi?pid="+SystemUtils.getPID()+"&uri="+f.getAbsolutePath())
                 .header("accept", "application/json")
                 .asJson()
@@ -135,6 +147,12 @@ public class TestHttpBasedMonitor {
 
         Assert.assertEquals(202, status);
 
+        Thread.sleep(2000);
         FileUtils.deleteDirectory(f);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        new ProcessBuilder().command("kill $(lsof -t -i:7070)").start();
     }
 }

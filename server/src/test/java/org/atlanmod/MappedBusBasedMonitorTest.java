@@ -2,11 +2,11 @@ package org.atlanmod;
 
 import io.mappedbus.MappedBusReader;
 import io.mappedbus.MappedBusWriter;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,12 +15,9 @@ import java.util.List;
 
 public class MappedBusBasedMonitorTest {
 
-    private String topic;
-
     @Test
     public void checkWriteMonitorWithMethodname() throws IOException {
         File f = File.createTempFile("test1", ".map", new File("src/test/resources"));
-        topic = f.getAbsolutePath();
 
         MappedBusWriter mappedBusWriter = new MappedBusWriter(f.getAbsolutePath(), 1000000L, 32);
         mappedBusWriter.open();
@@ -37,7 +34,6 @@ public class MappedBusBasedMonitorTest {
     @Test
     public void checkWriteMonitorWithFloatValue() throws IOException {
         File f = File.createTempFile("test2", ".map", new File("src/test/resources"));
-        topic = f.getAbsolutePath();
 
         MappedBusWriter mappedBusWriter = new MappedBusWriter(f.getAbsolutePath(), 1000000L, 32);
         mappedBusWriter.open();
@@ -54,16 +50,53 @@ public class MappedBusBasedMonitorTest {
     @Test
     public void checkWriteMonitorSequential() throws IOException, InterruptedException {
         File f = new File("src/test/resources/test3");
-        if (!f.exists())
-            f.mkdir();
+        FileUtils.deleteDirectory(f);
+
+        f.mkdirs();
 
         Files.walk(f.toPath()).forEach(internalFile -> internalFile.toFile().delete());
-        topic = f.getAbsolutePath();
 
         long pid = SystemUtils.getPID();
-        MappedBusBasedMonitor.main(new String[]{String.valueOf(pid), f.getAbsolutePath()});
+
+        MappedBusBasedMonitor mappedBusBasedMonitor = new MappedBusBasedMonitor(f, (int) pid);
+        mappedBusBasedMonitor.buildMonitorPowerApi();
+        mappedBusBasedMonitor.run();
 
         Thread.sleep(500);
+
+        File output = Files.walk(f.toPath()).filter(p -> p.toFile().getName().startsWith("power")).findFirst().get().toFile();
+
+        MappedBusReader mappedBusReader = new MappedBusReader(output.getAbsolutePath(), 100000L, 32);
+        mappedBusReader.open();
+
+        MappedBusFloat mappedBusFloat = new MappedBusFloat();
+
+        List<Float> floats = new ArrayList<>();
+
+        while (mappedBusReader.next()) {
+            mappedBusReader.readMessage(mappedBusFloat);
+            floats.add(mappedBusFloat.getValue());
+        }
+
+        Assert.assertTrue(floats.size() > 0);
+    }
+
+    @Test
+    public void checkWriteMonitorSequentialThread() throws IOException, InterruptedException {
+        File f = new File("src/test/resources/test5");
+        if (!f.exists())
+            f.mkdirs();
+
+        Files.walk(f.toPath()).forEach(internalFile -> internalFile.toFile().delete());
+
+        MappedBusBasedMonitor mappedBusBasedMonitor = new MappedBusBasedMonitor(f, (int) Thread.currentThread().getId());
+        mappedBusBasedMonitor.buildMonitorThreadLevel((int) Thread.currentThread().getId());
+        mappedBusBasedMonitor.run();
+
+        for (int i = 0; i < 100000; ++i) {
+            i++;
+            i--;
+        }
 
         File output = Files.walk(f.toPath()).filter(p -> p.toFile().getName().startsWith("power")).findFirst().get().toFile();
 
